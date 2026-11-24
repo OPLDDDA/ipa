@@ -1,0 +1,42 @@
+name: WallpaperStudio
+options:
+  bundleIdPrefix: com.ofx
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+schemes:
+  WallpaperStudio:
+    build:
+      targets:
+        WallpaperStudio: all
+    run:
+      configuration: Debug
+    archive:
+      configuration: Release
+
+targets:
+  WallpaperStudio:
+    type: application
+    platform: iOS
+    sources:
+      - path: WallpaperStudio
+    info:
+      path: WallpaperStudio/Info.plist
+      properties:
+        NSPhotoLibraryAddUsageDescription: "WallpaperStudio сохраняет анимированные обои в Фото, чтобы ты мог поставить их вручную."
+        NSPhotoLibraryUsageDescription: "Нужен для проверки сохранённых обоев."
+        UILaunchScreen: {}
+        ITSAppUsesNonExemptEncryption: false
+        UIRequiredDeviceCapabilities:
+          - arm64
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.ofx.wallpaperstudio
+      PRODUCT_NAME: WallpaperStudio
+      SWIFT_VERSION: 5.9
+      TARGETED_DEVICE_FAMILY: "1,2"
+      IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+      ENABLE_PREVIEWS: YES
