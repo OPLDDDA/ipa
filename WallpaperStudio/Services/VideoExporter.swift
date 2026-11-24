@@ -100,7 +100,7 @@ final class VideoExporter {
         }
 
         let bytesPerRow = CVPixelBufferGetBytesPerRow(buffer)
-        let bitmapInfo = CGImageAlphaInfo.premultipliedFirst.rawValue | kCGBitmapByteOrder32Little.rawValue
+        let bitmapInfo = CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
 
         guard let context = CGContext(data: baseAddress,
                                       width: Int(size.width),
