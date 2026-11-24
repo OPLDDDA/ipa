@@ -1,0 +1,9 @@
+Package: com.ofx.wallpaperstudio.tweaks
+Name: WallpaperStudio Tweaks
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Home screen customization companion for WallpaperStudio. Hides icon labels, rounds the dock and softens folders.
+Maintainer: ofx
+Author: ofx
+Section: Tweaks
+Depends: mobilesubstrate
