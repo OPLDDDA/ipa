@@ -1,42 +1,39 @@
-name: WallpaperStudio
-options:
-  bundleIdPrefix: com.ofx
-  deploymentTarget:
-    iOS: "17.0"
-  createIntermediateGroups: true
-  groupSortPosition: top
+name: Build WallpaperStudio IPA
 
-schemes:
-  WallpaperStudio:
-    build:
-      targets:
-        WallpaperStudio: all
-    run:
-      configuration: Debug
-    archive:
-      configuration: Release
+on:
+  workflow_dispatch:
 
-targets:
-  WallpaperStudio:
-    type: application
-    platform: iOS
-    sources:
-      - path: WallpaperStudio
-    info:
-      path: WallpaperStudio/Info.plist
-      properties:
-        NSPhotoLibraryAddUsageDescription: "WallpaperStudio сохраняет анимированные обои в Фото, чтобы ты мог поставить их вручную."
-        NSPhotoLibraryUsageDescription: "Нужен для проверки сохранённых обоев."
-        UILaunchScreen: {}
-        ITSAppUsesNonExemptEncryption: false
-        UIRequiredDeviceCapabilities:
-          - arm64
-        UISupportedInterfaceOrientations:
-          - UIInterfaceOrientationPortrait
-    settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.ofx.wallpaperstudio
-      PRODUCT_NAME: WallpaperStudio
-      SWIFT_VERSION: 5.9
-      TARGETED_DEVICE_FAMILY: "1,2"
-      IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-      ENABLE_PREVIEWS: YES
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen & Generate Project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build App without signing
+        run: |
+          xcodebuild -project WallpaperStudio.xcodeproj \
+            -scheme WallpaperStudio \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            CONFIGURATION_BUILD_DIR=$RUNNER_TEMP/build
+
+      - name: Package into IPA
+        run: |
+          mkdir -p $RUNNER_TEMP/Payload
+          cp -r $RUNNER_TEMP/build/*.app $RUNNER_TEMP/Payload/
+          cd $RUNNER_TEMP
+          zip -r WallpaperStudio.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WallpaperStudio-ipa
+          path: ${{ runner.temp }}/WallpaperStudio.ipa
